@@ -42,6 +42,15 @@ private final Mail email;
         return adminRepo.save(admin);
     }
 
+    public List<Admin> ListerAdmin() {
+        return adminRepo.findAll();
+    }
+
+    public String supprimerAdmin(long id) {
+        adminRepo.deleteById(id);
+        return "Admin supprimer !";
+    }
+
 //FORMATEUR ZONE ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public Formateur creerformateur(Formateur form) {

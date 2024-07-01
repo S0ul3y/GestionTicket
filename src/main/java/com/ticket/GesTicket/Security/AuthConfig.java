@@ -50,7 +50,7 @@ public class AuthConfig {
                 .csrf(csrf -> csrf.disable()) // Désactiver CSRF pour simplifier les tests API
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login", "/register").permitAll() // Permettre l'accès aux routes de connexion et d'inscription
+                                //.requestMatchers("/login", "/register").permitAll() // Permettre l'accès aux routes de connexion et d'inscription
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/formateur/**").hasRole("FORMATEUR")
                                 //.requestMatchers("/formateur/**").permitAll()
@@ -58,40 +58,32 @@ public class AuthConfig {
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
-                .formLogin(formLogin ->
+                .formLogin(withDefaults())
+                /*formLogin ->
                         formLogin
                                 .loginProcessingUrl("/perform_login")
                                 .successHandler(authenticationSuccessHandler())
                                 .failureHandler(authenticationFailureHandler())
-                                .permitAll()
-                )
-                .logout(logout ->
-                        logout
-                                .logoutUrl("/perform_logout")
-                                .logoutSuccessHandler((request, response, authentication) -> {
-                                    response.getWriter().println("Déconnexion réussie");
-                                    response.setStatus(HttpServletResponse.SC_OK);
-                                })
-                                .permitAll()
-                )
+                                .permitAll()*/
+
                 .authenticationProvider(authenticationProvider());
 
         return http.build();
     }
 
-    @Bean
+   /* @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return (request, response, authentication) -> {
-            response.getWriter().println("Connexion OK");
-            response.setStatus(HttpServletResponse.SC_OK);
+            //response.getWriter().println("Connexion OK");
+            //response.setStatus(HttpServletResponse.SC_OK);
         };
-    }
+    }*/
 
-    @Bean
+   /* @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return (request, response, exception) -> {
             response.getWriter().println("Erreur de connexion: " + exception.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         };
-    }
+    }*/
 }

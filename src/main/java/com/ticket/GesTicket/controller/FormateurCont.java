@@ -34,6 +34,12 @@ public class FormateurCont {
         return formaSer.ApprenListe();
     }
 
+    @PreAuthorize("hasRole('FORMATEUR')")
+    @DeleteMapping("supprimerapprenant/{id}")
+    public String SupApp(@PathVariable long id){
+        return formaSer.supprimerApprenant(id);
+    }
+
 
     //TICKET ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -45,8 +51,8 @@ public class FormateurCont {
 
     //@PreAuthorize("hasRole('FORMATEUR')")
     @PostMapping("/repondreticket/{id}")
-    public String repondreTicket(@RequestBody Reponse notification, @PathVariable long id){
-        return formaSer.RepondreTicket(id, notification);
+    public String repondreTicket(@RequestBody Reponse reponse, @PathVariable long id){
+        return formaSer.RepondreTicket(id, reponse);
     }
 
 }

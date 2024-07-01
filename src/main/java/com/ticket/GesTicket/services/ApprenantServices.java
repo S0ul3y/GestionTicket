@@ -4,15 +4,10 @@ import com.ticket.GesTicket.Security.Mail;
 import com.ticket.GesTicket.Statut;
 import com.ticket.GesTicket.modele.*;
 import com.ticket.GesTicket.repository.ApprenantRepo;
+import com.ticket.GesTicket.repository.NotifRepo;
 import com.ticket.GesTicket.repository.TicketRepo;
 import com.ticket.GesTicket.repository.UserRepo;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import com.ticket.GesTicket.services.formateurServices;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +24,7 @@ public class ApprenantServices {
     private final Mail mail;
 
     private final Session session;
-
+    private final NotifRepo notifRepo;
 
     //@Override
     /*public User getCurrentUser() {
@@ -39,7 +34,7 @@ public class ApprenantServices {
     }*/
 
 
-    // TICKET
+    // TICKET ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     public Ticket AddTicket(Ticket ticket) {
         //Apprenant us = (Apprenant) getCurrentUser();
         Apprenant us = (Apprenant) session.getCurrentUser();  //(Apprenant) getCurrentUser();
@@ -55,19 +50,24 @@ public class ApprenantServices {
     }
 
 
-
-
-    /*public Apprenant creerApprenant(Apprenant App) {
-        return AppRepo.save(App);
-    }*/
-
-
     public List<User> ListerApprenent() {
         return userRepo.findAll();
     }
 
+    /*
+    public Reponse lireReponse(Long id, Reponse reponse){
 
-    public Apprenant modifierTicket(long id, Apprenant App) {
+        Apprenant us = (Apprenant) session.getCurrentUser();  //(Apprenant) getCurrentUser();
+        notifRepo.findById(us.getId());
+        return
+        /*return ticketRepo.findById(id)
+                .map(T ->{
+                    notifRepo.findById(T.getId());
+                }).orElseThrow(()-> new RuntimeException("reponse non trouvée"));}
+        return */
+
+
+    /*public Apprenant modifierTicket(long id, Apprenant App) {
         return AppRepo.findById(id)
                 .map(A -> {
                     A.setNom(App.getNom());
@@ -76,7 +76,7 @@ public class ApprenantServices {
                     A.setPassword(App.getPassword());
                     return AppRepo.save(A);
                 }).orElseThrow(()-> new RuntimeException("Apprenant non trouvée"));
-    }
+    }*/
 
 
     public String supprimerApprenant(long id) {

@@ -22,7 +22,7 @@ public class formateurServices {
     private final AdminRepo adminRepo;
     private final PasswordEncoder passwordEncoder;
     private final Mail email;
-
+    private final Session session;
 
     //TICKET ZONE ===========================================================================================================
 
@@ -31,10 +31,11 @@ public class formateurServices {
                 .map(T ->
                         ApprenRepo.findById(T.getApprenant().getId())
                         .map(Ap -> {
-                            email.envoiesMessage(Ap.getEmail(), "Votre ticket à été répondu merci :)");
+                            email.envoiesMessage(Ap.getEmail(), "Bonjour "+Ap.getNom()+" "+Ap.getPrenom()+" <br> Votre ticket à été répondu <br> QUESTION: <br> "+T.getDescription()+" <br> REPONSE :<br> "+reponse.getReponse());
                             T.setStatut(Statut.RESOLU);
                             ticketRepo.save(T);
-                            //reponse.getTicket().setId(id_tic);
+                            Formateur us = (Formateur) session.getCurrentUser();  //(Apprenant) getCurrentUser();
+                            reponse.setFormateur(us);
                             reponse.setTicket(T);
                             notifRepo.save(reponse);
                             return "Ticket répondu avec succès";
@@ -46,7 +47,6 @@ public class formateurServices {
         return ticketRepo.findById(id_tic)
                 .map(T -> ApprenRepo.findById(T.getApprenant().getId())
                         .map(Ap -> {
-                            System.out.println("methode envois message2");
                             email.envoiesMessage(Ap.getEmail(), "Votre ticket est ouvert, vous aurez un email une fois fini");
                             T.setStatut(Statut.OUVERT);
                             return ticketRepo.save(T);
@@ -58,7 +58,7 @@ public class formateurServices {
 
     public User creerAppren(User Appren) {
 
-        email.envoiesMessage(Appren.getEmail(), "Votre compte à été créer et votre mot de pass est :"+Appren.getPassword());
+        email.envoiesMessage(Appren.getEmail(), "Bonjour "+Appren.getNom() +" "+Appren.getPrenom()+" <br> Votre compte à été créer et votre mot de pass est :<br>"+Appren.getPassword());
 
         String encodedPassword = passwordEncoder.encode(Appren.getPassword());
         Appren.setPassword(encodedPassword);
@@ -71,7 +71,10 @@ public class formateurServices {
         return ApprenRepo.findAll();
     }
 
-
+    public String supprimerApprenant(long id) {
+        ApprenRepo.deleteById(id);
+        return "Apprenant supprimer !";
+    }
 
 
 }

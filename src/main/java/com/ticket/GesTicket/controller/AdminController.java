@@ -7,6 +7,8 @@ import com.ticket.GesTicket.repository.AdminRepo;
 import com.ticket.GesTicket.repository.UserRepo;
 import com.ticket.GesTicket.services.AdminServices;
 import com.ticket.GesTicket.services.ApprenantServices;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +21,8 @@ import com.ticket.GesTicket.services.formateurServices;
 import java.util.List;
 
 @RestController
+
+@Tag(name = "ADMIN", description = "Les actions de l'administrateur")
 @RequestMapping("/admin")
 @AllArgsConstructor
 public class AdminController {
@@ -28,14 +32,30 @@ public class AdminController {
     private final AdminRepo adminRepo;
     private final UserRepo userRepo;
 
+
+    // Admin ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    @Operation(description = "Ajout d'un Administrateur")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/AjouterAdmin")
     public User CreerAdmin(@RequestBody Admin admin){
         return AddSer.creerAdmin(admin);
     }
 
+    @GetMapping("/lsiteadmin")
+    public List<Formateur> ListeAdmin() {
+        return AddSer.ListerFormateur();
+    }
 
-//FORMATEUR
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/supadmin/{id}")
+    public String SupprimerAdmin(@PathVariable long id) {
+        return AddSer.supprimerformateur(id);
+    }
+
+
+//FORMATEUR +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/addform")
     public Formateur AddFormateur(@RequestBody Formateur formateur) {
@@ -46,23 +66,12 @@ public class AdminController {
         return AddSer.ListerFormateur();
     }
 
-    public String SupprimerFormateur(int id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/supformateur/{id}")
+    public String SupprimerFormateur(@PathVariable long id) {
         return AddSer.supprimerformateur(id);
     }
 
-
-
-    public ResponseEntity<Object> getMyDetails(){
-        return ResponseEntity.ok(userRepo.findByEmail(getLoggedInUserDetails().getUsername()));
-    }
-
-    public UserDetails getLoggedInUserDetails(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.getPrincipal() instanceof UserDetails){
-            return (UserDetails) authentication.getPrincipal();
-        }
-        return null;
-    }
 
 
 }
